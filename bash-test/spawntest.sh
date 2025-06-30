@@ -1,9 +1,12 @@
 #!/bin/sh
 
+# MYPID=$$
+# sudo strace -p $MYPID -e signal &
+
 # Function to handle signals in the parent script
 cleanup() {
     echo "Parent: Received signal $1, cleaning up..."
-    if [[ -n $CHILD_PID ]]; then
+    if [ -n "$CHILD_PID" ]; then
         echo "Parent: Waiting for child process (PID: $CHILD_PID) to exit..."
         # commented out to prevent sending SIGTERM to the child process
         # kill -TERM $CHILD_PID 2>/dev/null
@@ -15,7 +18,7 @@ cleanup() {
 
 # Set up signal handlers for the parent
 
-for sig in SIGTERM SIGINT; do
+for sig in TERM INT; do
     trap "cleanup $sig" $sig
 done
 
@@ -32,7 +35,7 @@ child_cleanup() {
 }
 
 # Set up signal handlers for the child
-for sig in SIGTERM SIGINT; do
+for sig in TERM INT; do
     trap "child_cleanup $sig" $sig
 done
 
@@ -50,12 +53,14 @@ chmod +x /tmp/child_process.sh
 
 # Spawn the child process
 echo "Parent: Starting child process..."
+# strace --tips sh -e /tmp/child_process.sh &
 /tmp/child_process.sh &
 CHILD_PID=$!
+
 echo "Parent: Child process started with PID: $CHILD_PID"
 
 # Keep the parent script running
-echo "Parent: Press Ctrl+C or send SIGTERM to stop..."
+echo "Parent: Press Ctrl+C or send SIGTERM to stop $$..."
 while true; do
     sleep 1
 done
