@@ -1,8 +1,8 @@
 FROM alpine:latest
 
-RUN apk add --no-cache strace pstree tini
+# RUN apk add --no-cache strace pstree tini
 
-ENTRYPOINT ["/sbin/tini", "--"]
+# ENTRYPOINT ["/sbin/tini", "-g", "--"]
 # Copy the script to the container
 COPY spawntest.sh /app/spawntest.sh
 
