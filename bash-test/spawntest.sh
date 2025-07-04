@@ -30,7 +30,7 @@ cat << 'EOF' > /tmp/child_process.sh
 
 # Function to handle signals in the child process
 child_cleanup() {
-    echo "Child: Received signal $1, exiting gracefully..."
+    echo "Child: Received signal $1, this should not have happened..."
     exit 0
 }
 
